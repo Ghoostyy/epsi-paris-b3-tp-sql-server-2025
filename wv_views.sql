@@ -33,5 +33,4 @@ JOIN parties pa ON pip.id_party = pa.id_party
 JOIN players_play pp ON p.id_player = pp.id_player                     
 JOIN turns t ON pp.id_turn = t.id_turn AND t.id_party = pa.id_party     
 JOIN players_in_parties pip2 ON pip2.id_party = pa.id_party            
-GROUP BY p.pseudo, pa.title_party;                                     
-GO
+GROUP BY p.pseudo, pa.title_party;
