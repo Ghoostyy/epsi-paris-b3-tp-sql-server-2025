@@ -1,3 +1,10 @@
+drop table if exists parties;
+drop table if exists roles;
+drop table if exists players;
+drop table if exists players_in_parties;
+drop table if exists turns;
+drop table if exists players_play;
+
 create table parties (
     id_party int,
     title_party text
