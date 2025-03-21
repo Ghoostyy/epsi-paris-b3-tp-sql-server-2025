@@ -3,9 +3,7 @@ DROP FUNCTION IF EXISTS get_the_winner;
 GO
  
 -- Fonction pour générer une position aléatoire qui n'a pas encore été utilisée pour une partie donnée
-CREATE OR ALTER FUNCTION random_position(
-    @nb_rows INT,           
-    @nb_cols INT,           
+CREATE OR ALTER FUNCTION random_position(         
     @party_id INT           
 )
 RETURNS TABLE                
@@ -18,10 +16,10 @@ RETURN (
             r.row_num AS row_pos,
             c.col_num AS col_pos
         FROM 
-            (SELECT TOP (@nb_rows) ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS row_num 
+            (SELECT TOP (10) ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS row_num 
              FROM master.dbo.spt_values) r
         CROSS JOIN 
-            (SELECT TOP (@nb_cols) ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS col_num 
+            (SELECT TOP (10) ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS col_num 
              FROM master.dbo.spt_values) c
     ),
     UsedPositions AS (
