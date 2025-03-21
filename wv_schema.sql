@@ -13,6 +13,7 @@ create table parties (
 create table roles (
     id_role int,
     description_role text
+    -- roles_type VARCHAR(50) NOT NULL DEFAULT 'undefined' --> in wv_index.sql
 );
 
 create table players (
@@ -24,7 +25,7 @@ create table players_in_parties (
     id_party int,
     id_player int,
     id_role int,
-    is_alive text
+    is_alive text -- is_alive BIT NOT NULL DEFAULT 1; --> in wv_index.sql
 );
 
 create table turns (
