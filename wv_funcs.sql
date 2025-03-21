@@ -141,3 +141,62 @@ GROUP BY
     tpj.tours_joues,
     tpp.total_tours;
 GO
+
+-- Vue intermédiaire pour l'aléatoire
+CREATE OR ALTER VIEW RandomValue AS
+SELECT CAST(RAND() * 100 AS INT) AS random_val;
+GO
+-- Fonction pour déterminer le prochain rôle à affecter (loup ou villageois) en respectant les quotas
+CREATE OR ALTER FUNCTION random_role(
+    @party_id INT           -- ID de la partie
+)
+RETURNS INT                 -- Retourne l'ID du rôle (loup ou villageois)
+AS
+BEGIN
+    DECLARE @wolf_role_id INT;
+    DECLARE @villager_role_id INT;
+    DECLARE @wolf_count INT;
+    DECLARE @villager_count INT;
+    DECLARE @total_players INT;
+    DECLARE @result_role_id INT;
+    DECLARE @random_value INT;
+    
+    -- Récupère les IDs des rôles pour loup et villageois
+    SELECT @wolf_role_id = id_role FROM roles WHERE role_type = 'loup';
+    SELECT @villager_role_id = id_role FROM roles WHERE role_type = 'villageois';
+    
+    -- Compte le nombre actuel de loups dans la partie
+    SELECT @wolf_count = COUNT(*)
+    FROM players_in_parties
+    WHERE id_party = @party_id AND id_role = @wolf_role_id;
+    
+    -- Compte le nombre actuel de villageois dans la partie
+    SELECT @villager_count = COUNT(*)
+    FROM players_in_parties
+    WHERE id_party = @party_id AND id_role = @villager_role_id;
+    
+    -- Calcule le nombre total de joueurs inscrits
+    SET @total_players = @wolf_count + @villager_count;
+    
+    -- Obtenir une valeur aléatoire de la vue
+    SELECT @random_value = random_val FROM RandomValue;
+    
+    -- Détermine le rôle à attribuer en fonction des quotas
+    -- Règle : Maintenir environ 1/4 de loups et 3/4 de villageois
+    IF @wolf_count < CEILING(@total_players * 0.25) AND (@wolf_count < @total_players / 3)
+        SET @result_role_id = @wolf_role_id;
+    ELSE
+        SET @result_role_id = @villager_role_id;
+    
+    -- Pour ajouter un peu d'aléatoire quand les quotas sont respectés
+    -- Si les proportions sont déjà bonnes, attribue aléatoirement un rôle avec 75% de chance d'être villageois
+    IF (@wolf_count >= CEILING(@total_players * 0.25)) AND (@villager_count >= CEILING(@total_players * 0.75))
+    BEGIN
+        IF @random_value <= 25  -- 25% de chance d'être un loup
+            SET @result_role_id = @wolf_role_id;
+        ELSE
+            SET @result_role_id = @villager_role_id;
+    END
+    
+    RETURN @result_role_id;
+END;
