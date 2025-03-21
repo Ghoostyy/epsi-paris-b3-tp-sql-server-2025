@@ -18,7 +18,7 @@ create table roles (
 
 create table players (
     id_player int,
-    pseudo text
+    pseudo text -- pseudo VARCHAR(50) NOT NULL --> in wv_index.sql
 );
 
 create table players_in_parties (
