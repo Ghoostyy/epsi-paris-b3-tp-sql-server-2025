@@ -1,5 +1,6 @@
 DROP VIEW IF EXISTS ALL_PLAYERS;
 DROP VIEW IF EXISTS ALL_PLAYERS_ELAPSED_GAME;
+DROP VIEW IF EXISTS ALL_PLAYERS_ELAPSED_TOUR;
 GO
 
 -- Vue pour calculer le nombre de parties et de tours joués par chaque joueur
