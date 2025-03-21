@@ -15,3 +15,10 @@ DROP COLUMN pseudo;
 
 ALTER TABLE players
 ADD pseudo VARCHAR(50) NOT NULL;
+
+-- modify title_party to varchar(50) in parties table for view compatibility
+ALTER TABLE parties
+DROP COLUMN title_party;
+
+ALTER TABLE parties
+ADD title_party VARCHAR(50) NOT NULL;

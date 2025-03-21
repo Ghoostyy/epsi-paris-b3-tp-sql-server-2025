@@ -7,7 +7,7 @@ drop table if exists players_play;
 
 create table parties (
     id_party int,
-    title_party text
+    title_party text -- title_party VARCHAR(50) NOT NULL DEFAULT 'undefined' --> in wv_index.sql
 );
 
 create table roles (
